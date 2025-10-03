@@ -1,29 +1,46 @@
-import React, { useState } from 'react';
-import './Home.css';
+import React from 'react';
+import styles from './Home.module.css';
+import { useNavigate } from 'react-router-dom';
 
-const Home: React.FC = () => {
-  const [user] = useState({
-    name: 'Usuário Teste',
-    points: 0,
-    referralLink: 'https://meusite.com/ref/12345',
-  });
+interface HomeProps {
+  user: { name: string; points: number; referralLink: string };
+  onLogout: () => void; // função para deslogar
+}
+
+const Home: React.FC<HomeProps> = ({ user, onLogout }) => {
+  const navigate = useNavigate();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(user.referralLink);
     alert('Link copiado!');
   };
 
+  const handleLogout = () => {
+    onLogout(); // limpa o usuário
+    navigate('/login'); // redireciona para login
+  };
+
   return (
-    <div className='home-container'>
-      <h2>Bem-vindo, {user.name}!</h2>
-      <p>
-        Sua pontuação atual: <strong>{user.points}</strong>
-      </p>
-      <p>Seu link de indicação:</p>
-      <div className='referral-box'>
-        <input type='text' value={user.referralLink} readOnly />
-        <button onClick={handleCopy}>Copiar Link</button>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Bem-vindo, {user.name}!</h2>
+      <p className={styles.text}>Sua pontuação atual: {user.points}</p>
+      <p className={styles.text}>Seu link de indicação:</p>
+
+      <div className={styles.referralBox}>
+        <input
+          type='text'
+          className={styles.referralInput}
+          value={user.referralLink}
+          readOnly
+        />
+        <button className={styles.referralButton} onClick={handleCopy}>
+          Copiar Link
+        </button>
       </div>
+
+      <button className={styles.logoutButton} onClick={handleLogout}>
+        Sair
+      </button>
     </div>
   );
 };

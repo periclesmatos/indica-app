@@ -1,53 +1,77 @@
 import React, { useState } from 'react';
-import './Form.css';
+import { useNavigate, Link } from 'react-router-dom';
+import styles from './Register.module.css';
 
 const Register: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-  });
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!name || !email || !password) {
+      setError('Preencha todos os campos.');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Email inválido.');
+      return;
+    }
+
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)) {
+      setError('Senha deve ter no mínimo 8 caracteres, letras e números.');
+      return;
+    }
+
+    alert('Conta criada com sucesso!');
+    navigate('/login');
   };
 
   return (
-    <div className='form-container'>
-      <h2>Registro</h2>
-      <form className='form'>
-        <label>Nome:</label>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Registrar</h2>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <label className={styles.label}>Nome:</label>
         <input
           type='text'
-          name='name'
-          placeholder='Digite seu nome'
-          value={formData.name}
-          onChange={handleChange}
-          required
+          className={styles.input}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
 
-        <label>Email:</label>
+        <label className={styles.label}>Email:</label>
         <input
           type='email'
-          name='email'
-          placeholder='Digite seu email'
-          value={formData.email}
-          onChange={handleChange}
-          required
+          className={styles.input}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
-        <label>Senha:</label>
+        <label className={styles.label}>Senha:</label>
         <input
           type='password'
-          name='password'
-          placeholder='Digite sua senha'
-          value={formData.password}
-          onChange={handleChange}
-          required
+          className={styles.input}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button type='submit'>Registrar</button>
+        {error && <p className={styles.error}>{error}</p>}
+
+        <button type='submit' className={styles.button}>
+          Registrar
+        </button>
       </form>
+
+      <p className={styles.navText}>
+        Já tem conta?{' '}
+        <Link to='/login' className={styles.navButton}>
+          Entrar
+        </Link>
+      </p>
     </div>
   );
 };
