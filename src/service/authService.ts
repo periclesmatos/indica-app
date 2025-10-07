@@ -24,7 +24,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      const logout = useAuthStore.getState().logoutUser;
+      const logout = useAuthStore.getState().logout;
       logout();
       window.location.href = "/login";
     }

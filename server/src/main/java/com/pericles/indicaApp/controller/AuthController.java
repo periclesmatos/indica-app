@@ -41,7 +41,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/currenteUser")
+    @GetMapping("/currentUser")
     public ResponseEntity<UserResponse> getCurrenteUser(Authentication authentication) throws IllegalAccessException {
         UserResponse response = authService.getCurrenteUser(authentication);
         return ResponseEntity.ok(response);

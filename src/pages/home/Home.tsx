@@ -5,7 +5,7 @@ import { useAuthStore } from '../../store/authStore';
 
 const Home: React.FC = () => {
   const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logoutUser);
+  const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
 
   const handleCopyReferral = () => {
