@@ -1,36 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './Login.module.css';
+import { useAuthStore } from '../../store/authStore';
+import type { LoginRequest } from '../../interface/LoginRequest';
+import { login } from '../../service/authService';
 
-interface LoginProps {
-  onLogin: (user: {
-    name: string;
-    points: number;
-    referralLink: string;
-  }) => void;
-}
+const Login: React.FC = () => {
+  const setAuth = useAuthStore((state) => state.setAuth);
 
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setError('');
     if (!email || !password) {
       setError('Preencha todos os campos.');
       return;
     }
-
-    // Simulação de login válido
-    onLogin({
-      name: 'Usuário Teste',
-      points: 0,
-      referralLink: 'https://meusite.com/ref/12345',
-    });
-    navigate('/home');
+    const request: LoginRequest = { email, password };
+    try {
+      const response = await login(request);
+      setAuth(response.user, response.token.tokenValue);
+      navigate('/home');
+    } catch (err) {
+      console.error(`ERRO: ${err}`);
+      setError('Falha ao fazer login.');
+    }
   };
 
   return (

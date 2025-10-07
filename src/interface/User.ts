@@ -1,5 +1,7 @@
 export interface User {
+  id: string;
   name: string;
+  email: string;
   points: number;
-  referralLink: string;
+  isLoggedIn: boolean;
 }

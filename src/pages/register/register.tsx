@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import styles from './Register.module.css';
+import { register } from '../../service/authService';
+import type { RegisterRequest } from '../../interface/RegisterRequest';
+import type { User } from '../../interface/User';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
@@ -8,27 +11,36 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const referralCode = searchParams.get("referralCode");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-
     if (!name || !email || !password) {
       setError('Preencha todos os campos.');
       return;
     }
-
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError('Email inválido.');
       return;
     }
-
     if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)) {
       setError('Senha deve ter no mínimo 8 caracteres, letras e números.');
       return;
     }
-
-    alert('Conta criada com sucesso!');
-    navigate('/login');
+    const request: RegisterRequest = {
+      name,
+      email,
+      password
+    };
+    try {
+      const user: User = await register(request, referralCode || undefined);
+      console.log(user)
+      navigate('/login');
+    } catch(err) {
+      console.log(`ERRO: ${err}`)
+      setError('Falha ao registrar usuário.');
+    }
   };
 
   return (

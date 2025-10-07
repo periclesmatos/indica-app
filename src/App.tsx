@@ -1,34 +1,36 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import type { User } from './interfaces/User.ts';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Home from './pages/home/Home';
-
+import { useAuthStore } from './store/authStore';
 
 const App: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const isLoggedIn = !!user;
-
-  const handleLogout = () => {
-    setUser(null);
-  };
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Navigate to='/login' replace />} />
-        <Route path='/login' element={<Login onLogin={setUser} />} />
-        <Route path='/register' element={<Register />} />
+        {/* Redireciona a raiz para home se logado, senão para login */}
         <Route
-          path='/home'
+          path='/'
           element={
             isLoggedIn ? (
-              <Home user={user!} onLogout={handleLogout} />
+              <Navigate to='/home' replace />
             ) : (
               <Navigate to='/login' replace />
             )
           }
+        />
+
+        {/* Rotas públicas */}
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+
+        {/* Rota protegida */}
+        <Route
+          path='/home'
+          element={isLoggedIn ? <Home /> : <Navigate to='/login' replace />}
         />
       </Routes>
     </BrowserRouter>
