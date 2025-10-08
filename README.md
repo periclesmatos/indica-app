@@ -9,7 +9,7 @@ O principal objetivo deste projeto é demonstrar **boas práticas modernas** de 
 
 - Cadastro e login de usuários  
 - Persistência do token JWT no `localStorage`  
-- Rota `/me` para validação e recuperação do usuário logado  
+- Rota `/currentUser` para validação e recuperação do usuário logado  
 - Redirecionamento automático de rotas protegidas  
 - Interface responsiva e moderna  
 - Comunicação entre frontend e backend via **REST API**  
@@ -56,7 +56,7 @@ indica-app/
 │   │   ├── security/
 │   │   └── service/
 │   ├── src/main/resources/
-│   │   └── application.yml
+│   │   └── application.properties
 │   └── pom.xml
 │
 ├── src/
@@ -79,9 +79,9 @@ indica-app/
 ### 🔧 Pré-requisitos
 
 - **Node.js**
-- **Java 25+**
+- **Java 25**
 - **Maven** (para build do backend)
-- **PostgreSQL** (ou outro banco configurado no `application.yml`)
+- **PostgreSQL** (ou outro banco configurado no `application.properties`)
 
 
 ### 🖥️ Backend (Java + Spring Boot)
@@ -91,18 +91,17 @@ indica-app/
    cd server
    ```
 
-2. Configure o banco em `src/main/resources/application.yml`:
-   ```yaml
-   spring:
-     datasource:
-       url: jdbc:postgresql://localhost:5432/indica_app
-       username: postgres
-       password: sua_senha
-     jpa:
-       hibernate:
-         ddl-auto: update
-   jwt:
-     secret: minha_chave_super_secreta
+2. Configure o banco de dados e as chaves JWT em src/main/resources/application.properties:
+   ```properties
+   # Configurações do banco de dados
+   spring.datasource.url=jdbc:postgresql://localhost:5432/indica_app
+   spring.datasource.username=postgres
+   spring.datasource.password=sua_senha
+   spring.jpa.hibernate.ddl-auto=update
+
+   # Configurações do JWT
+   jwt.public.key=classpath:app.pub
+   jwt.private.key=classpath:app.key
    ```
 
 3. Compile e execute:
@@ -139,7 +138,7 @@ indica-app/
 
 1. O backend retorna um **JWT** após login bem-sucedido.  
 2. O frontend armazena o token no `localStorage` via Zustand.  
-3. Ao recarregar a página, o app valida o token via `/api/me`.  
+3. Ao recarregar a página, o app valida o token via `/currentUser`.  
 4. Se inválido, o token é removido e o usuário é redirecionado ao login.  
 
 > Essa abordagem garante **sessões persistentes e seguras**, mantendo o sistema **sem estado (stateless)** no backend.
