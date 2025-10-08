@@ -160,7 +160,7 @@ A IA foi usada como **assistente técnica e educacional**, ajudando em pontos es
 ### 📘 Principais Aprendizados
 
 - Entendimento mais profundo do fluxo de autenticação entre **React e Spring**.  
-- Aplicação prática de **boas práticas de estado e segurança** em projetos fullstack.  
+- Aplicação de **boas práticas de estado e segurança** em projetos fullstack.  
 - Melhoria da **clareza e documentação técnica** do projeto.  
 - Uso consciente da IA como ferramenta para **acelerar aprendizado e qualidade**, mantendo autoria própria.
 
