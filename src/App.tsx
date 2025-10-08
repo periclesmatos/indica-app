@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Register from './pages/register/Register';
+
+import Register from './pages/register/register';
 import Home from './pages/home/Home';
+import Login from './pages/login/Login';
 import { useAuthStore } from './store/authStore';
 import { getMe } from './service/authService';
-import Login from './pages/login/Login';
 
 const App: React.FC = () => {
   const user = useAuthStore((state) => state.user);
@@ -15,7 +16,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       // o token já foi restaurado automaticamente do persist
-      if (token && !user) {
+      if (token) {
         try {
           const me = await getMe();
           setAuth(me, token);
